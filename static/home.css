@@ -1,0 +1,124 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background: radial-gradient(circle at top, #1a2633, #0b0f14);
+    color: white;
+}
+
+/* ================= NAVBAR ================= */
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    background: rgba(10, 15, 22, 0.85);   /* darker navbar */
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.logo{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span{
+    color: #28d7ff;
+}
+
+.nav-links{
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    color: #cfd6dc;
+}
+
+.nav-links li{
+    cursor: pointer;
+}
+
+.nav-actions{
+    display: flex;
+    gap: 14px;
+}
+
+/* LOGIN & SIGNUP SAME STYLE */
+.login,
+.signup{
+    border: 1px solid #28d7ff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    color: #28d7ff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.login:hover,
+.signup:hover{
+    background: #28d7ff;
+    color: #000;
+}
+
+/* ================= HERO ================= */
+.hero{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 60px;
+}
+
+/* ================= LEFT ================= */
+.hero-text{
+    max-width: 520px;
+}
+
+.hero-text h1{
+    font-size: 44px;
+    margin-bottom: 20px;
+}
+
+.hero-text span{
+    color: #28d7ff;
+}
+
+.hero-text p{
+    color: #b8c2cc;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+/* BUTTONS */
+.buttons{
+    display: flex;
+    gap: 15px;
+}
+
+.primary{
+    background: linear-gradient(135deg, #28d7ff, #1aaed6);
+    color: black;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.secondary{
+    background: transparent;
+    border: 1px solid #cfd6dc;
+    color: #cfd6dc;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= RIGHT IMAGE ================= */
+.hero-image img{
+    width: 520px;
+    max-width: 100%;
+    filter: drop-shadow(0 40px 80px rgba(0,0,0,0.9));
+}

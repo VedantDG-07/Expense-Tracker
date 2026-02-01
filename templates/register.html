@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker Register</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1 class="title">EXPENSE TRACKER</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<div class="box">
+    <h2>REGISTER</h2>
+    <form method='POST' action="/register" onsubmit="return register()">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Create username">
+
+        <label>Password</label>
+        <input type="password" name="passwordp" id="rpass" placeholder="Create password">
+
+        <label>Confirm Password</label>
+        <input type="password" name="passwordc" placeholder="Confirm password">
+
+        <button type="submit">Register</button>
+    </form>
+    <p id="msg"></p>
+
+    <p style="text-align:center; margin-top:10px;">
+        Already have an account?
+        <a href="/login" style="color:#00e5ff;">Login</a>
+    </p>
+</div>
+
+<script src="/static/register.js"></script>
+</body>
+</html>
