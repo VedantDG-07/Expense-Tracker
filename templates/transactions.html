@@ -38,13 +38,18 @@ REPLACE this logic when Python backend is integrated.
         <!-- TOP BAR -->
         <div class="topbar">
             <h2>All Transactions</h2>
-            <button class="logout">Logout</button>
+            <a href="{{ url_for('logout') }}">
+                <button class="logout">Logout</button>
+            </a> 
         </div>
 
         <!-- SEARCH -->
         <div class="expense-search" style="margin-top:25px;">
-            <input type="text" id="transactionSearch"
-                   placeholder="Search by date or category">
+            <form action="/search">
+                <input type="text" id="transactionSearch"
+                    placeholder="Search by date or category">
+                <button class="logout">Search</button>
+            </form>
         </div>
 
         <!-- TRANSACTIONS TABLE -->
@@ -65,10 +70,10 @@ REPLACE this logic when Python backend is integrated.
                         <td>{{ e.category }}</td>
                         <td>{{ e.amount }}</td>
                     </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="4" style="text-align:center;">No expenses yet</td>
-                    </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No expenses yet</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

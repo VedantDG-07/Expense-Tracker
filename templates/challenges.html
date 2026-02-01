@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head><title>Challenges</title>
+<link rel="stylesheet" href="/static/challenges.css">
+</head>
+<body>
+  <h2>Create Monthly Challenge</h2>
+  <form method="POST" action="{{ url_for('challenges') }}">
+    <label>Category:
+      <select name="category">
+        <option>Food</option>
+        <option>Clothes</option>
+        <option>Bills</option>
+        <option>Travel</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <label>Limit amount: <input type="number" name="limit" step="0.01" required></label>
+    <button type="submit">Create Challenge</button>
+  </form>
+
+  <h3>Your challenges (this month)</h3>
+  <table>
+    <thead><tr><th>Category</th><th>Limit</th><th>Completed</th></tr></thead>
+    <tbody>
+    {% for c in challenges %}
+      <tr>
+        <td>{{ c.category }}</td>
+        <td>₹{{ c.limit_amount }}</td>
+        <td>{% if c.completed %}✅{% else %}—{% endif %}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="3">No challenges</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ url_for('dashboard') }}">Back to dashboard</a></p>
+</body>
+</html>
