@@ -8,7 +8,7 @@ app.secret_key = "secret_key"
 
 init_users_db()
 init_expenses_db()
-
+expenses=[]
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -76,12 +76,14 @@ def dashboard():
 
     user_id = session["user_id"]
     expenses = get_user_expenses(user_id)
+    income=get_user_income(user_id)
     no_spend_days = get_no_spend_days(user_id)
 
     total_expense = sum(e["amount"] for e in expenses)
+    total_income = sum(i["amount"] for i in income)
 
-    activity_dates = set(e["entry_date"] for e in expenses) | set(no_spend_days)
 
+    activity_dates = set(e["entry_date"] for e in expenses) | set(d["date"] for d in no_spend_days)
     streak = 0
     today = datetime.today().date()
     today_str = today.strftime("%Y-%m-%d")
@@ -94,14 +96,19 @@ def dashboard():
             else:
                 break
 
-    already_marked = today_str in no_spend_days
+    already_marked = today_str in set(d["date"] for d in no_spend_days)
+
+    transactions = get_recent_transactions(user_id)
 
     return render_template(
         "dashboard.html",
         expenses=expenses,
         total_expense=total_expense,
         streak=streak,
-        already_marked=already_marked
+        already_marked=already_marked,
+        income=income,
+        total_income=total_income,
+        transactions=transactions
     )
 
 
@@ -124,9 +131,9 @@ def add_income_route():
 
     income_date = request.form.get("date")
     amount = request.form.get("amount")
-    source = request.form.get("source")
+    category = request.form.get("category")
 
-    add_income(session["user_id"], income_date, amount, source)
+    add_income(session["user_id"], income_date, category, amount)
     return redirect(url_for("dashboard"))
 
 
@@ -146,16 +153,20 @@ def transactions():
     if "user_id" not in session:
         return redirect(url_for("login"))
     user_id = session["user_id"]
-    conn = get_expenses_db()
-    data = conn.execute("""
-        SELECT id, expense_date, entry_date, category, amount
-        FROM expenses
-        WHERE user_id=?
-        ORDER BY expense_date ASC
-    """, (user_id,)).fetchall()
-    conn.close()
-
+    data = get_user_expenses(user_id)
     return render_template("transactions.html",expenses=data)
+
+@app.route("/search", methods=["GET","POST"])
+def search():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    keyword = request.form.get("search", "")   # default empty string
+    results = search_expenses(session["user_id"], keyword)
+
+    return render_template("transactions.html", expenses=results)
+
+
 
 @app.route("/Report_Analysis",methods=["GET","POST"])
 def Report_Analysis():

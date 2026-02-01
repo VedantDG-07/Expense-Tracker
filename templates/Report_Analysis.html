@@ -35,7 +35,9 @@
         <!-- TOP BAR -->
         <div class="topbar">
             <h2>Expense Charts</h2>
-            <button class="logout">Logout</button>
+            <a href="{{ url_for('logout') }}">
+                <button class="logout">Logout</button>
+            </a> 
         </div>
 
         <!-- CHART SECTION -->

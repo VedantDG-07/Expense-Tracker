@@ -38,7 +38,7 @@ def init_expenses_db():
             user_id INTEGER,
             income_date TEXT,
             amount REAL,
-            source TEXT
+            category TEXT
         )
     """)
     conn.commit()
@@ -57,15 +57,25 @@ def add_expense(user_id, expense_date, category, amount):
     conn.commit()
     conn.close()
 
-def add_income(user_id):
-    conn = sqlite3.connect("expense_tracker.db")
-    cur = conn.cursor()
-
-    cur.execute("SELECT SUM(amount) FROM income WHERE user_id = ?", (user_id,))
-    total = cur.fetchone()[0]
-
+def add_income(user_id,income_date,category, amount):
+    conn = get_expenses_db()
+    conn.execute("""
+        INSERT INTO income (user_id,income_date, category, amount)
+        VALUES (?, ?, ?, ?)
+    """, (user_id,income_date,category,float(amount)))
+    conn.commit()
     conn.close()
-    return total if total else 0
+
+def get_user_income(user_id):
+    conn = get_expenses_db()
+    data = conn.execute("""
+        SELECT id, income_date, category, amount
+        FROM income
+        WHERE user_id=?
+        ORDER BY income_date DESC
+    """, (user_id,)).fetchall()
+    conn.close()
+    return data or []
 
 def get_user_expenses(user_id):
     conn = get_expenses_db()
@@ -73,12 +83,29 @@ def get_user_expenses(user_id):
         SELECT id, expense_date, entry_date, category, amount
         FROM expenses
         WHERE user_id=?
-        ORDER BY expense_date ASC
-        LIMIT 5
+        ORDER BY expense_date DESC
     """, (user_id,)).fetchall()
     conn.close()
     return data or []
 
+def get_recent_transactions(user_id):
+    conn = get_expenses_db()
+
+    data = conn.execute("""
+        SELECT expense_date AS date, category, amount, 'expense' AS type
+        FROM expenses
+        WHERE user_id=?
+
+        ORDER BY date DESC
+        LIMIT 8
+    """, (user_id,)).fetchall()
+        # UNION ALL
+
+        # SELECT income_date AS date, category, amount, 'income' AS type
+        # FROM income
+        # WHERE user_id=?
+    conn.close()
+    return data or []
 
 def add_no_spend_day(user_id):
     conn = get_expenses_db()
@@ -91,6 +118,25 @@ def add_no_spend_day(user_id):
 
     conn.commit()
     conn.close()
+
+def search_expenses(user_id, keyword):
+    if not keyword:       
+        return []
+
+    keyword = keyword.strip()
+
+    conn = get_expenses_db()
+
+    results = conn.execute("""
+        SELECT id, expense_date, entry_date, category, amount
+        FROM expenses
+        WHERE user_id=?
+        AND (LOWER(category) LIKE LOWER(?) OR expense_date LIKE ?)
+        ORDER BY entry_date DESC
+    """, (user_id, f"%{keyword}%", f"%{keyword}%")).fetchall()
+
+    conn.close()
+    return results
 
 
 def get_no_spend_days(user_id):
