@@ -38,6 +38,7 @@ def get_points(user_id):
     row = conn.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
     conn.close()
     return row["points"] if row is not None else 0
+
 def returnUser():
     conn=get_users_db()
     conn.execute("SELECT id FROM users")

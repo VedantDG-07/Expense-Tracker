@@ -157,6 +157,9 @@ def transactions():
 
     return render_template("transactions.html",expenses=data)
 
+@app.route("/Report_Analysis",methods=["GET","POST"])
+def Report_Analysis():
+    return render_template("Report_Analysis.html")
 
 @app.route("/logout")
 def logout():
