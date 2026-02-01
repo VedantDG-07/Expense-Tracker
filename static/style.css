@@ -1,0 +1,264 @@
+/* =========================
+   GLOBAL BACKGROUND
+========================= */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at center, #0f0f0f, #000000 80%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+}
+
+/* =========================
+   TITLE
+========================= */
+.title {
+    margin-top: 60px;
+    font-size: 42px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color:  #1dd3f8;
+    text-shadow: 0 0 10px  #1dd3f8, 0 0 25px  #1dd3f8;
+}
+
+/* =========================
+   LOGIN / REGISTER CARD
+========================= */
+.box {
+    width: 380px;
+    margin-top: 40px;
+    background: #111;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 0 20px #00e5ff33, 0 0 40px #00e5ff22;
+    border: 1px solid #00e5ff44;
+}
+
+.box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    letter-spacing: 1px;
+}
+
+/* =========================
+   LABELS
+========================= */
+.box label {
+    font-size: 14px;
+    margin-top: 15px;
+    display: block;
+    color: #ddd;
+}
+
+/* =========================
+   INPUT FIELDS
+========================= */
+.box input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1b1b1b;
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.box input:focus {
+    border-color:  #1dd3f8;
+    outline: none;
+    box-shadow: 0 0 8px #00e5ff88;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.box button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 25px;
+    background:  #1dd3f8;
+    color: #0f1720;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.box button:hover {
+    background:  #1dd3f8;
+    box-shadow: 0 0 10px  #1dd3f8;
+}
+
+/* =========================
+   LINKS
+========================= */
+.box p {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.box a {
+    color:  #1dd3f8;
+    font-weight: 600;
+}
+
+.box a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   FLASH MESSAGES
+========================= */
+.flash {
+    width: 380px;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.flash.success {
+    background: #003b40;
+    color:  #1dd3f8;
+    border: 1px solid  #1dd3f8;
+}
+
+.flash.danger {
+    background: #3b0000;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background: radial-gradient(circle at top, #1a2633, #0b0f14);
+    color: white;
+}
+
+/* ================= NAVBAR ================= */
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    background: rgba(10, 15, 22, 0.85);   /* darker navbar */
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.logo{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span{
+    color: #28d7ff;
+}
+
+.nav-links{
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    color: #cfd6dc;
+}
+
+.nav-links li{
+    cursor: pointer;
+}
+
+.nav-actions{
+    display: flex;
+    gap: 14px;
+}
+
+/* LOGIN & SIGNUP SAME STYLE */
+.login,
+.signup{
+    border: 1px solid #28d7ff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    color: #28d7ff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.login:hover,
+.signup:hover{
+    background: #28d7ff;
+    color: #000;
+}
+
+/* ================= HERO ================= */
+.hero{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 60px;
+}
+
+/* ================= LEFT ================= */
+.hero-text{
+    max-width: 520px;
+}
+
+.hero-text h1{
+    font-size: 44px;
+    margin-bottom: 20px;
+}
+
+.hero-text span{
+    color: #28d7ff;
+}
+
+.hero-text p{
+    color: #b8c2cc;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+/* BUTTONS */
+.buttons{
+    display: flex;
+    gap: 15px;
+}
+
+.primary{
+    background: linear-gradient(135deg, #28d7ff, #1aaed6);
+    color: black;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.secondary{
+    background: transparent;
+    border: 1px solid #cfd6dc;
+    color: #cfd6dc;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= RIGHT IMAGE ================= */
+.hero-image img{
+    width: 520px;
+    max-width: 100%;
+    filter: drop-shadow(0 40px 80px rgba(0,0,0,0.9));
+}
