@@ -83,7 +83,9 @@ def dashboard():
     total_income = sum(i["amount"] for i in income)
 
 
-    activity_dates = set(e["entry_date"] for e in expenses) | set(d["date"] for d in no_spend_days)
+    activity_dates = set(e["expense_date"] for e in expenses) | set(no_spend_days)
+
+
     streak = 0
     today = datetime.today().date()
     today_str = today.strftime("%Y-%m-%d")
@@ -96,7 +98,8 @@ def dashboard():
             else:
                 break
 
-    already_marked = today_str in set(d["date"] for d in no_spend_days)
+    already_marked = today_str in no_spend_days
+
 
     transactions = get_recent_transactions(user_id)
 
