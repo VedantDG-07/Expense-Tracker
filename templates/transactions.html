@@ -45,9 +45,17 @@ REPLACE this logic when Python backend is integrated.
 
         <!-- SEARCH -->
         <div class="expense-search" style="margin-top:25px;">
-            <form action="/search">
-                <input type="text" id="transactionSearch"
-                    placeholder="Search by date or category">
+            <form action="/search" method="POST">
+                <select name="search" style="margin-right: 20px;"required>
+                    <option>All</option>
+                    <option>Food</option>
+                    <option>Clothes</option>
+                    <option>Bills</option>
+                    <option>Travel</option>
+                    <option>Other</option>
+                </select>
+                <!-- <input type="text" name="search" id="transactionSearch"
+                    placeholder="Search by date or category"> -->
                 <button class="logout">Search</button>
             </form>
         </div>

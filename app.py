@@ -163,9 +163,13 @@ def transactions():
 def search():
     if "user_id" not in session:
         return redirect(url_for("login"))
-
-    keyword = request.form.get("search", "")   # default empty string
-    results = search_expenses(session["user_id"], keyword)
+    user_id = session["user_id"]
+    keyword = request.form.get("search")
+    
+    if keyword!="All":
+        results = search_expenses(session["user_id"], keyword)
+    else:
+        results=get_user_expenses(user_id)
 
     return render_template("transactions.html", expenses=results)
 
@@ -174,6 +178,18 @@ def search():
 @app.route("/Report_Analysis",methods=["GET","POST"])
 def Report_Analysis():
     return render_template("Report_Analysis.html")
+
+@app.route('/settings')
+def settings():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    return render_template('settings.html')
+
+@app.route('/challenges')
+def challenges():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    return render_template('challenges.html')
 
 @app.route("/logout")
 def logout():
