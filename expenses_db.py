@@ -97,7 +97,7 @@ def get_recent_transactions(user_id):
         WHERE user_id=?
 
         ORDER BY date DESC
-        LIMIT 8
+        LIMIT 5
     """, (user_id,)).fetchall()
         # UNION ALL
 
@@ -122,7 +122,7 @@ def add_no_spend_day(user_id):
 def search_expenses(user_id, keyword):
     if not keyword:       
         return []
-
+    
     keyword = keyword.strip()
 
     conn = get_expenses_db()

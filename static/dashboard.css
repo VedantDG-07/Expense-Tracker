@@ -112,7 +112,7 @@ body {
 }
 
 .expense-form input,
-.expense-form select {
+.expense-form select,.expense-search select {
     padding: 8px;
     background: #1b2633;
     border: none;

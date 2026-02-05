@@ -1,0 +1,219 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #0f1720;
+            color: white;
+        }
+
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .bg-shape.one {
+            width: 300px;
+            height: 300px;
+            background: #1dd3f8;
+            top: -80px;
+            right: -80px;
+        }
+
+        .bg-shape.two {
+            width: 350px;
+            height: 350px;
+            background: #22c55e;
+            bottom: -120px;
+            left: -120px;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #0b1118;
+            padding: 20px;
+        }
+
+        .logo {
+            color: #1dd3f8;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .sidebar li.active,
+        .sidebar li:hover {
+            background: #121c26;
+            color: #1dd3f8;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+
+        .top-card {
+            background: linear-gradient(135deg, #1dd3f8, #0ea5e9);
+            padding: 28px;
+            border-radius: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000;
+        }
+
+        .points-box {
+            background: white;
+            padding: 14px 22px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .info-card {
+            margin-top: 30px;
+            background: #e6f2ff;
+            color: #000;
+            padding: 24px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .budget-card {
+            margin-top: 35px;
+            background: #111b24;
+            padding: 28px;
+            border-radius: 30px;
+        }
+
+        .budget-form {
+            display: flex;
+            gap: 15px;
+            margin-top: 18px;
+        }
+
+        .budget-form input,
+        .budget-form select {
+            padding: 12px;
+            background: #1b2633;
+            border: none;
+            color: white;
+            border-radius: 18px;
+        }
+
+        .budget-form button {
+            background: #1dd3f8;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .budget-status {
+            margin-top: 15px;
+        }
+
+        .section-title {
+            margin: 40px 0 20px;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
+        }
+
+        .challenge-card {
+            position: relative;
+            padding: 25px;
+            border-radius: 35px;
+            text-align: center;
+            overflow: hidden;
+            transition: 0.4s ease;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+        }
+
+        .challenge-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 0;
+        }
+
+        .challenge-card * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .food {
+            background: url("https://images.unsplash.com/photo-1600891964599-f61ba0e24092") center/cover no-repeat;
+        }
+
+        .travel {
+            background: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee") center/cover no-repeat;
+        }
+
+        .savings {
+            background: url("https://images.unsplash.com/photo-1526304640581-d334cdbbf45e") center/cover no-repeat;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-10px) scale(1.03);
+        }
+
+        .points {
+            display: inline-block;
+            margin: 12px 0;
+            background: #1dd3f8;
+            color: #000;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .complete-btn {
+            background: #1dd3f8;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .completed {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .done {
+            margin-top: 10px;
+            color: #22c55e;
+            font-weight: bold;
+        }
