@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Challenges | Expanzo</title>
-   <link rel="stylesheet" href="/static/challenges.css"> 
-    <style>
-       
-    </style>
+<meta charset="UTF-8">
+<title>Challenges | Expanzo</title>
+<link rel="stylesheet" href="/static/challenges.css">
 </head>
 
 <body>
-
 <div class="bg-shape one"></div>
 <div class="bg-shape two"></div>
 
 <div class="container">
 
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <h2 class="logo">Expanzo</h2>
         <ul>
@@ -24,123 +21,91 @@
             <li><a href="/Report_Analysis" style="color:inherit; text-decoration:none;">Report & Analysis</a></li>
             <li class="active"><a href="/challenges" style="color:inherit; text-decoration:none;">Challenges</a></li>
             <li><a href="/chatbot" style="color:inherit; text-decoration:none;">Chatbot</a></li>
-            <li><a href="/split" style="color:inherit; text-decoration:none;">Split</a></li>
             <li><a href="/settings" style="color:inherit; text-decoration:none;">Settings</a></li>
         </ul>
     </div>
 
+    <!-- MAIN CONTENT -->
     <div class="main">
 
+        <!-- TOP BAR -->
         <div class="top-card">
             <div>
                 <h1>🎯 Challenges</h1>
-                <p>Complete challenges & earn points</p>
+                <p>Auto-tracked based on your spending</p>
             </div>
             <div class="points-box">
-                🏆 Points: <span id="totalPoints">0</span>
+                🏆 XP: {{ points }}<br>
+                <small>Level {{ level }} — {{ rank }}</small>
             </div>
         </div>
 
-        <div class="info-card">
-            <div>
-                <h2>Well Done! 👏</h2>
-                <p>Small savings today, big relief tomorrow.</p>
-            </div>
-            <div style="font-size:40px;">💰</div>
-        </div>
-
-        <!-- 🔧 FIXED BUDGET SECTION -->
+        <!-- LIMIT SETTINGS -->
         <div class="budget-card">
-            <h2>💸 Budget Challenge</h2>
-            <p>Stay under your budget and earn <b>15 points</b></p>
-
-            <div class="budget-form">
-                <input type="number" id="budgetAmount" placeholder="Budget Amount (₹)">
-                <select>
-                    <option>This Week</option>
-                    <option>This Month</option>
-                </select>
-                <button onclick="startBudget()">Start</button>
-            </div>
-
-            <div id="budgetStatus" class="budget-status"></div>
+            <h2>⚙ Set Your Limits</h2>
+            <form action="/set_limits" method="POST" class="budget-form">
+                <input type="number" name="food_limit" placeholder="Food Limit ₹" required>
+                <input type="number" name="travel_limit" placeholder="Travel Limit ₹" required>
+                <input type="number" name="monthly_budget" placeholder="Monthly Budget ₹" required>
+                <button type="submit">Save Limits</button>
+            </form>
         </div>
 
-        <h2 class="section-title">🟢 Easy Challenges</h2>
-        <div class="challenge-grid">
-
-            <div class="challenge-card food" data-points="5">
-                <h3>Food Control</h3>
-                <p>Spend less than ₹500 on food</p>
-                <span class="points">+5 pts</span>
-                <button class="complete-btn">Mark as Completed</button>
-            </div>
-
-            <div class="challenge-card travel" data-points="10">
-                <h3>Travel Saver</h3>
-                <p>Reduce travel expense by ₹200</p>
-                <span class="points">+10 pts</span>
-                <button class="complete-btn">Mark as Completed</button>
-            </div>
-
+        <!-- LIMIT DISPLAY -->
+        <div class="limit-display">
+            🍔 Food Limit ₹{{ limits.food_limit if limits else 0 }} |
+            🚗 Travel Limit ₹{{ limits.travel_limit if limits else 0 }} |
+            💰 Budget ₹{{ limits.monthly_budget if limits else 0 }}
         </div>
 
+        <!-- EASY CHALLENGES -->
+        <div class="challenge-section">
+            <h2 class="section-title">🟢 Easy Challenges</h2>
+
+            <div class="challenge-row">
+
+                <div class="challenge-card easy {% if 'food_control' in done_challenges %}completed{% endif %}">
+                    <div class="food overlay">
+                        <h3>Food Control</h3>
+                        <span class="points">+5 XP</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ progress.food }}%"></div>
+                        </div>
+                        <small>{{ progress.food }}% of limit used</small>
+                    </div>
+                </div>
+
+                <div class="challenge-card easy {% if 'travel_saver' in done_challenges %}completed{% endif %}">
+                    <div class="travel overlay">
+                        <h3>Travel Saver</h3>
+                        <span class="points">+10 XP</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ progress.travel }}%"></div>
+                        </div>
+                        <small>{{ progress.travel }}% of limit used</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HARD CHALLENGE (NOW CORRECTLY INSIDE MAIN) -->
         <h2 class="section-title">🔴 Hard Challenge</h2>
-        <div class="challenge-grid">
-
-            <div class="challenge-card savings" data-points="15">
-                <h3>Monthly Master</h3>
-                <p>Save ₹3000 in one month</p>
-                <span class="points">+15 pts</span>
-                <button class="complete-btn">Mark as Completed</button>
+        <div class="challenge-row single">
+            <div class="challenge-card hard {% if 'budget_master' in done_challenges %}completed{% endif %}">
+                <div class="overlay savings">
+                    <h3>Budget Master</h3>
+                    <p>Keep expenses under your monthly budget</p>
+                    <span class="points">+15 XP</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ progress.budget }}%"></div>
+                    </div>
+                    <small>{{ progress.budget }}% used</small>
+                </div>
             </div>
-
         </div>
 
-    </div>
-</div>
-
-<script>
-let total = 0;
-
-/* NORMAL CHALLENGES */
-document.querySelectorAll(".complete-btn").forEach(btn => {
-    btn.onclick = function () {
-        const card = this.parentElement;
-        const pts = parseInt(card.dataset.points);
-        total += pts;
-        document.getElementById("totalPoints").innerText = total;
-        card.classList.add("completed");
-        card.innerHTML += "<p class='done'>✔ Completed</p>";
-    };
-});
-
-/* 🔧 BUDGET FIX */
-function startBudget() {
-    const amt = document.getElementById("budgetAmount").value;
-    if (!amt) {
-        alert("Please enter budget amount");
-        return;
-    }
-
-    document.getElementById("budgetStatus").innerHTML =
-        `<p class="done">
-            Budget Active: ₹${amt}
-            <button onclick="completeBudget()" 
-                style="margin-left:10px;background:#22c55e;border:none;
-                padding:6px 12px;border-radius:15px;cursor:pointer">
-                Mark Completed
-            </button>
-        </p>`;
-}
-
-function completeBudget() {
-    total += 15;
-    document.getElementById("totalPoints").innerText = total;
-    document.getElementById("budgetStatus").innerHTML =
-        "<p class='done'>✔ Budget Challenge Completed (+15 pts)</p>";
-}
-</script>
-
+    </div> <!-- END MAIN -->
+</div> <!-- END CONTAINER -->
 </body>
 </html>

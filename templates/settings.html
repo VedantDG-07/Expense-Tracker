@@ -9,77 +9,74 @@
 
 <div class="container">
 
-    <!-- Sidebar (same as dashboard) -->
-    <aside class="sidebar">
+    <!-- SIDEBAR -->
+<div class="sidebar">
         <h2 class="logo">Expanzo</h2>
         <ul>
-             <li><a href="/dashboard" style="color:inherit; text-decoration:none;">Dashboard</a></li>
+            <li class="active"><a href="/dashboard" style="color:inherit; text-decoration:none;">Dashboard</a></li>
             <li><a href="/transactions" style="color:inherit; text-decoration:none;">Transactions</a></li>
             <li><a href="/Report_Analysis" style="color:inherit; text-decoration:none;">Report & Analysis</a></li>
             <li><a href="/challenges" style="color:inherit; text-decoration:none;">Challenges</a></li>
             <li><a href="/chatbot" style="color:inherit; text-decoration:none;">Chatbot</a></li>
             <li><a href="/split" style="color:inherit; text-decoration:none;">Split</a></li>
-            <li class="active"><a href="/settings" style="color:inherit; text-decoration:none;">Settings</a></li>
+            <li><a href="/settings" style="color:inherit; text-decoration:none;">Settings</a></li>
         </ul>
-    </aside>
+    </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <main class="main">
         <h1>Settings ⚙️</h1>
 
-        <!-- Profile Card -->
+        <!-- PROFILE CARD -->
         <div class="card">
             <h2>Profile Information</h2>
 
-            <form class="form">
-                <div class="row">
-                    <div class="field">
-                        <label>Full Name</label>
-                        <input type="text" placeholder="Enter your name">
-                    </div>
+            <form class="form" action="/update_profile" method="POST">
 
+                <div class="row">
                     <div class="field">
                         <label>Username</label>
-                        <input type="text" placeholder="username">
+                        <input type="text" value="{{ user.username }}" disabled>
+                    </div>
+
+                    <div class="field">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="field">
-                        <label>Email</label>
-                        <input type="email" placeholder="example@email.com">
-                    </div>
-
-                    <div class="field">
                         <label>Phone</label>
-                        <input type="text" placeholder="+91 XXXXX XXXXX">
+                        <input type="text" name="phone" value="{{ user.phone_no }}" required>
                     </div>
                 </div>
-
 
                 <button type="submit">Update Profile</button>
             </form>
         </div>
 
-        <!-- Password Card -->
+        <!-- PASSWORD CARD -->
         <div class="card">
             <h2>Change Password</h2>
 
-            <form class="form">
+            <form class="form" action="/update_password" method="POST">
                 <div class="row">
                     <div class="field">
                         <label>Current Password</label>
-                        <input type="password">
+                        <input type="password" name="current_password" required>
                     </div>
 
                     <div class="field">
                         <label>New Password</label>
-                        <input type="password">
+                        <input type="password" name="new_password" required>
                     </div>
                 </div>
 
-                <button type="submit">Update Password</button>
+                <button style="margin-bottom: 10px;" type="submit">Update Password</button>
             </form>
+
+            <a href="/forgotpassword"  style="color:#00e5ff; text-decoration:none; margin-top:30px;">Forgot Password?</a>
         </div>
 
     </main>

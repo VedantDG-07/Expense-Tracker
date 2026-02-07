@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Features - Expanzo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Expan<span>zo</span></div>
+
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services">Services</a></li>
+        <li><a href="/features" class="active">Features</a></li>
+        <li><a href="/about">About Us</a></li>
+    </ul>
+
+    <div class="nav-actions">
+        <a href="/login" class="login">Log In</a>
+        <a href="/register" class="signup">Sign Up</a>
+    </div>
+</nav>
+
+<section class="page">
+    <h1>Powerful Features</h1>
+    <p class="subtitle">
+        Expanzo simplifies money management and helps you build smart
+        financial habits through automation, analytics, and gamification.
+    </p>
+
+    <div class="card-container">
+
+        <div class="card">
+            <img src="/static/icons/expense.png" class="icon">
+            <h3>Smart Expense Tracking</h3>
+            <p>Record and categorize daily expenses to understand where your money goes.</p>
+        </div>
+
+        <div class="card">
+            <img src="/static/icons/report.png" class="icon">
+            <h3>Visual Reports</h3>
+            <p>Analyze spending with pie charts, monthly summaries, and category insights.</p>
+        </div>
+
+        <div class="card">
+            <img src="/static/icons/Budget.png" class="icon">
+            <h3>Budget & Goals</h3>
+            <p>Set monthly limits, track savings, and achieve financial discipline.</p>
+        </div>
+
+        <div class="card">
+            <img src="/static/icons/game.png" class="icon">
+            <h3>Gamification</h3>
+            <p>Maintain streaks, earn rewards, and stay motivated to control spending.</p>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>
+

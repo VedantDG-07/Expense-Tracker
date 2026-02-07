@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify OTP</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1 class="title">EXPENSE TRACKER</h1>
+
+<div class="box">
+    <h2>VERIFY OTP</h2>
+
+    <form method="POST" action="/verify-otp">
+        <label>Enter OTP</label>
+        <input type="text"
+               name="otp"
+               placeholder="6-digit OTP"
+               maxlength="6"
+               required>
+
+        <button type="submit">Verify OTP</button>
+    </form>
+
+    <p style="text-align:center; margin-top:12px;">
+        <a href="/forgot-password" style="color:#00e5ff; text-decoration:none;">
+            Resend OTP
+        </a>
+    </p>
+</div>
+
+{% if otp %}
+<script>
+alert("Your OTP is: {{ otp }}");
+</script>
+{% endif %}
+
+</body>
+</html>

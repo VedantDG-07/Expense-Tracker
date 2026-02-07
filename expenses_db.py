@@ -1,5 +1,9 @@
 import sqlite3
 from datetime import datetime
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_DIR = os.path.join(BASE_DIR, "Backend")
+os.makedirs(DB_DIR, exist_ok=True)
 
 EXPENSES_DB = "Backend/expenses.db"
 
@@ -41,6 +45,7 @@ def init_expenses_db():
             category TEXT
         )
     """)
+    
     conn.commit()
     conn.close()
 
@@ -147,3 +152,15 @@ def get_no_spend_days(user_id):
     ).fetchall()
     conn.close()
     return [d["date"] for d in data] if data else []
+
+
+def get_category_wise_expense(user_id):
+    conn = get_expenses_db()
+    data = conn.execute("""
+        SELECT category, SUM(amount) AS total
+        FROM expenses
+        WHERE user_id = ?
+        GROUP BY category
+    """, (user_id,)).fetchall()
+    conn.close()
+    return data
