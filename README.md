@@ -160,6 +160,8 @@ This project demonstrates:
 ## 👨‍💻 Author
 
 **Vedant Gawde**
+**Mrunmayee Shinde**
+**Bhavesh Gambhirrao**
 
 ---
 
@@ -169,9 +171,3 @@ This project is for educational and demonstration purposes.
 
 ---
 
-If you want, I can also make:
-
-✔ PPT content
-✔ Project report
-✔ Viva questions
-✔ System architecture diagram
