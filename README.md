@@ -1,8 +1,3 @@
-Love this stage 😎 — README time = project feels *official* now.
-Here’s a clean, professional README for your project:
-
----
-
 # 💰 **Expanzo – Smart Expense Tracker with Gamification**
 
 Expanzo is a **Flask-based Expense Tracking Web Application** that helps users manage spending, track budgets, and build better financial habits through **gamified challenges and insights**.
