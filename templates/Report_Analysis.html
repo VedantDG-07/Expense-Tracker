@@ -1,22 +1,14 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Expense Charts</title>
     <link rel="stylesheet" href="/static/dashboard.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-
-
-<!-- HAMBURGER -->
-<div class="hamburger" onclick="toggleSidebar()">☰</div>
-
-<div class="container">
-
-    <!-- SIDEBAR -->
-    <div class="sidebar" id="sidebar">
+<div class="container report-page">
+    <div class="sidebar">
         <h2 class="logo">Expanzo</h2>
         <ul>
             <li><a href="/dashboard" style="color:inherit; text-decoration:none;">Dashboard</a></li>
@@ -24,43 +16,112 @@
             <li class="active"><a href="/Report_Analysis" style="color:inherit; text-decoration:none;">Report & Analysis</a></li>
             <li><a href="/challenges" style="color:inherit; text-decoration:none;">Challenges</a></li>
             <li><a href="/chatbot" style="color:inherit; text-decoration:none;">Chatbot</a></li>
-            <li><a href="/split" style="color:inherit; text-decoration:none;">Split</a></li>
             <li><a href="/settings" style="color:inherit; text-decoration:none;">Settings</a></li>
+        </ul>
         </ul>
     </div>
 
-    <!-- MAIN -->
     <div class="main">
-
-        <!-- TOP BAR -->
         <div class="topbar">
-            <h2>Expense Charts</h2>
-            <a href="{{ url_for('logout') }}">
-                <button class="logout">Logout</button>
-            </a> 
+            <h2>Expense Analytics</h2>
+            <a href="{{ url_for('logout') }}"><button class="logout">Logout</button></a>
         </div>
 
-        <!-- CHART SECTION -->
-        <div class="expense-box" style="margin-top:30px;">
+        <div class="charts-grid">
 
-            <h3 style="margin-bottom:20px;">
-                Category-wise Expense Distribution
-            </h3>
+            <div class="chart-card">
+                <h3>Category-wise Expense (Pie)</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
 
-            <canvas id="expenseChart" height="140"></canvas>
+            <div class="chart-card">
+                <h3>Category-wise Expense (Bar)</h3>
+                <canvas id="barChart"></canvas>
+            </div>
 
-            <p style="margin-top:15px; color:#aaa; font-size:14px;">
-                This pie chart shows how expenses are distributed
-                across different categories.
-            </p>
+            <div class="chart-card full-width">
+                <h3>Weekly Expense Trend</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
 
         </div>
-
     </div>
 </div>
 
-<script src="dashboard.js"></script>
+<script>
+const labels = {{ labels | tojson }};
+const values = {{ values | tojson }};
+const weekLabels = {{ week_labels | tojson }};
+const weekValues = {{ week_values | tojson }}.map(Number);
 
+/* PIE CHART */
+new Chart(document.getElementById("pieChart"), {
+    type: "pie",
+    data: {
+        labels: labels,
+        datasets: [{
+            data: values,
+            backgroundColor: ["#ff6384","#36a2eb","#ffcd56","#4bc0c0","#9966ff"],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: "#fff" } } }
+    }
+});
+
+/* BAR CHART */
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: "Total Expense",
+            data: values,
+            backgroundColor: "#1dd3f8",
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: { ticks: { color: "#ccc" } },
+            y: { ticks: { color: "#ccc" }, beginAtZero: true }
+        },
+        plugins: { legend: { labels: { color: "#fff" } } }
+    }
+});
+
+/* WEEKLY LINE GRAPH */
+new Chart(document.getElementById("lineChart"), {
+    type: "line",
+    data: {
+        labels: weekLabels,
+        datasets: [{
+            label: "Weekly Expense",
+            data: weekValues,
+            borderColor: "#1dd3f8",
+            backgroundColor: "rgba(29,211,248,0.15)",
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointBackgroundColor: "#1dd3f8"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: { ticks: { color: "#ccc" } },
+            y: { ticks: { color: "#ccc" }, beginAtZero: true }
+        },
+        plugins: { legend: { labels: { color: "#fff" } } }
+    }
+});
+</script>
 
 </body>
 </html>

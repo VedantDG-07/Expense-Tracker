@@ -122,3 +122,100 @@ body{
     max-width: 100%;
     filter: drop-shadow(0 40px 80px rgba(0,0,0,0.9));
 }
+
+
+
+/*navbar pages */
+
+.page {
+    padding: 80px 10%;
+    color: white;
+    text-align: center;
+}
+
+.card-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 25px;
+    border-radius: 12px;
+    width: 250px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0,255,255,0.2);
+}
+
+.features-list {
+    list-style: none;
+    margin-top: 30px;
+    font-size: 18px;
+}
+
+.features-list li {
+    margin: 12px 0;
+}
+
+
+/* Remove default link styling */
+.nav-links a {
+    text-decoration: none;
+    color: #bcdcff;   /* normal color */
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+/* Hover effect */
+.nav-links a:hover {
+    color: #00e0ff;
+}
+
+/* Active page highlight */
+.nav-links a.active {
+    color: #00e0ff;
+    border-bottom: 2px solid #00e0ff;
+    padding-bottom: 3px;
+}
+
+
+
+
+.subtitle {
+    color: #9fb3c8;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+.icon {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.about-text {
+    max-width: 700px;
+    margin: 15px auto;
+    color: #b8c2cc;
+    line-height: 1.7;
+}
+
+.team {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.member {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    width: 220px;
+}

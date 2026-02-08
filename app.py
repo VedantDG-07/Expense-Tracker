@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
-from users_db import get_users_db, init_users_db
+from users_db import *
 from expenses_db import *
 from datetime import datetime, timedelta
 
@@ -35,6 +35,47 @@ def login():
 
     return render_template("login.html")
 
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form["email"]
+        user = get_user_by_email(email)
+
+        if user:
+            import random
+            otp = random.randint(100000, 999999)
+            session["otp"] = str(otp)
+            session["reset_email"] = email
+
+            return render_template("verify_otp.html", otp=otp)
+
+        else:
+            return "<script>alert('Email not registered');</script>"
+
+    return render_template("forgot_password.html")
+
+@app.route("/verify-otp", methods=["POST"])
+def verify_otp():
+    if request.form["otp"] == session.get("otp"):
+        return redirect("/reset_password")
+    else:
+       return "<script>alert('Invalid OTP'); window.location='/forgot-password';</script>"
+
+
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    if "reset_email" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        new_password = request.form["password"]
+        update_user_password_by_email(session["reset_email"], new_password)
+        session.pop("reset_email")
+        return redirect("/login")
+
+    return render_template("reset_password.html")
+
 # ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -42,6 +83,8 @@ def register():
         username = request.form.get('username')
         passwordp = request.form.get('passwordp')
         passwordc = request.form.get('passwordc')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
 
         if passwordp != passwordc:
             flash("Passwords do not match!", "danger")
@@ -52,17 +95,18 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users(username,password) VALUES (?,?)",
-                (username, passwordp)
+                "INSERT INTO users(username,password,email,phone_no) VALUES (?,?,?,?)",
+                (username, passwordp,email,phone)
             )
             db.commit()
             flash('Account created! Please login.', 'success')
             return redirect(url_for('login'))
 
-        except:
+        except sqlite3.IntegrityError:
             flash("Username already exists!", "danger")
-            return redirect(url_for('register'))
-
+        except Exception as e:
+            print("REGISTER ERROR:", e)
+            flash("Something went wrong", "danger")
         finally:
             cursor.close()
             db.close()
@@ -175,26 +219,201 @@ def search():
 
 
 
-@app.route("/Report_Analysis",methods=["GET","POST"])
+@app.route("/Report_Analysis", methods=["GET", "POST"])
 def Report_Analysis():
-    return render_template("Report_Analysis.html")
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
-@app.route('/settings')
+    user_id = session["user_id"]
+    conn = get_expenses_db()
+
+    # Category totals
+    data = conn.execute("""
+        SELECT category, SUM(amount) as total
+        FROM expenses
+        WHERE user_id=?
+        GROUP BY category
+    """, (user_id,)).fetchall()
+
+    labels = [d["category"] for d in data]
+    values = [d["total"] for d in data]
+
+    # Weekly data
+    week_data = conn.execute("""
+        SELECT expense_date, SUM(amount)
+        FROM expenses
+        WHERE user_id=?
+        GROUP BY expense_date
+        ORDER BY expense_date DESC
+        LIMIT 7
+    """, (user_id,)).fetchall()
+
+    week_labels = [d[0] for d in week_data][::-1]
+    week_values = [d[1] for d in week_data][::-1]
+
+    conn.close()
+
+    return render_template(
+        "Report_Analysis.html",
+        labels=labels,
+        values=values,
+        week_labels=week_labels,
+        week_values=week_values
+    )
+
+@app.route("/settings")
 def settings():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template('settings.html')
 
-@app.route('/challenges')
+    conn = get_users_db()
+    user = conn.execute(
+        "SELECT username, email, phone_no FROM users WHERE id=?",
+        (session["user_id"],)
+    ).fetchone()
+    conn.close()
+
+    return render_template("settings.html", user=user)
+
+@app.route("/challenges")
 def challenges():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template('challenges.html')
+
+    user_id = session["user_id"]
+
+    check_challenges(user_id)
+    conn = get_users_db()
+
+    limits = conn.execute(
+    "SELECT * FROM user_limits WHERE user_id=?",
+    (user_id,)).fetchone()
+    conn.close()
+
+    expenses = get_user_expenses(user_id)
+    income = get_user_income(user_id)
+
+    food_total = sum(e["amount"] for e in expenses if e["category"] == "Food")
+    travel_total = sum(e["amount"] for e in expenses if e["category"] == "Travel")
+    total_expense = sum(e["amount"] for e in expenses)
+    total_income = sum(i["amount"] for i in income)
+
+    progress = {
+        "food": int((food_total / limits["food_limit"]) * 100) if limits and limits["food_limit"] else 0,
+        "travel": int((travel_total / limits["travel_limit"]) * 100) if limits and limits["travel_limit"] else 0,
+        "budget": int((total_expense / limits["monthly_budget"]) * 100) if limits and limits["monthly_budget"] else 0
+    }
+
+
+    points = get_points(user_id)
+    level = points // 100 + 1
+    rank = get_rank(points)
+    done_challenges = get_completed_challenges(user_id)
+
+    return render_template(
+        "challenges.html",
+        limits=limits,
+        progress=progress,
+        points=points,
+        level=level,
+        rank=rank,
+        done_challenges=done_challenges
+    )
+
+
+
+@app.route("/set_limits", methods=["POST"])
+def set_limits():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    food = request.form.get("food_limit")
+    travel = request.form.get("travel_limit")
+    monthly = request.form.get("monthly_budget")   
+
+    conn = get_users_db()
+    conn.execute("""
+        INSERT OR REPLACE INTO user_limits
+        (user_id, food_limit, travel_limit, monthly_budget)
+        VALUES (?,?,?,?)
+    """, (session["user_id"], food, travel, monthly))  
+    conn.commit()
+    conn.close()
+
+    flash("Limits Updated!", "success")
+    return redirect(url_for("challenges"))
+
+@app.route("/update_profile", methods=["POST"])
+def update_profile():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    email = request.form.get("email")
+    phone = request.form.get("phone")
+
+    conn = get_users_db()
+    conn.execute("""
+        UPDATE users
+        SET email=?, phone_no=?
+        WHERE id=?
+    """, (email, phone, session["user_id"]))
+    conn.commit()
+    conn.close()
+
+    flash("Profile updated!", "success")
+    return redirect(url_for("settings"))
+
+@app.route("/update_password", methods=["POST"])
+def update_password():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    current = request.form.get("current_password")
+    new = request.form.get("new_password")
+
+    conn = get_users_db()
+    user = conn.execute(
+        "SELECT password FROM users WHERE id=?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if user["password"] != current:
+        flash("Current password incorrect", "danger")
+        conn.close()
+        return redirect(url_for("settings"))
+
+    conn.execute(
+        "UPDATE users SET password=? WHERE id=?",
+        (new, session["user_id"])
+    )
+    conn.commit()
+    conn.close()
+
+    flash("Password updated!", "success")
+    return redirect(url_for("settings"))
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+@app.route("/services")
+def services():
+    return render_template("services.html")
+
+@app.route("/features")
+def features():
+    return render_template("features.html")
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/chatbot")
+def chatbot():
+    return render_template("chatbot.html")
+
 
 print("running.......")
 if __name__ == "__main__":
