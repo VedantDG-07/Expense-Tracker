@@ -415,5 +415,6 @@ def chatbot():
     return render_template("chatbot.html")
 
 
+print("running.......")
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
